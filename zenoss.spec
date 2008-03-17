@@ -1,6 +1,24 @@
 # TODO
+# - split build/install
 # - FHS
 # - use system Zope 2.8.8
+# - TwistedSNMP-0.3.13
+# - pysnmp-3.4.3
+# - Twisted-2.5.0
+# - TwistedCore-2.5.0
+# - pycrypto-1.9a6
+# - pynetsnmp-0.27.0
+# - ctypes-1.0.1
+# - MySQL-python-1.2.0
+# - rrdtool-1.2.23
+# - epydoc-3.0beta1
+# - python-snpp-1.1.1
+# - Yapps-2.1.1
+# - nagios-plugins-1.4.5
+# - libsmi-0.4.5
+# - wmi-0.1.5
+# - pyip-0.7
+# - simplejson-1.4
 
 # the location where zenoss is installed
 %define zenhome /opt/zenoss
@@ -38,7 +56,7 @@
 Summary:	The Open Source Network Management System
 Name:		zenoss
 Version:	2.1.3
-Release:	0.el5
+Release:	1.1
 License:	GPL
 Group:		Management/Network
 Source0:	http://dl.sourceforge.net/zenoss/%{name}-%{version}-0.tar.gz
@@ -87,6 +105,8 @@ Key features include:
 %setup -q
 
 %build
+
+%install
 replace() {
     SEARCH=$1
     REPLACE=$2
@@ -142,7 +162,7 @@ CONF_DIR=$ZEN_BUILD_DIR/conf
 mkdir -p $ZEN_INST_DIR/etc
 cp $CONF_DIR/snmpd.conf $ZEN_INST_DIR/etc
 cp $CONF_DIR/my.cnf $ZEN_INST_DIR/etc
-mkdir $ZEN_INST_DIR/log
+install -d $ZEN_INST_DIR/log
 
 # land the zenctl into the init.d directory as "zenoss"
 INIT_SCRIPT_DIR=$RPM_BUILD_ROOT%{_initrddir}
@@ -155,17 +175,17 @@ mkdir -p $INIT_SCRIPT_DIR
 cp $RPM_BUILD_ROOT/%{zenhome}/bin/zenctl ${START_SCRIPT}
 
 for file in \
-	${START_SCRIPT} \
-	${INIT_PRE_SCRIPT} \
-	${INIT_POST_SCRIPT} \
-	${UPGRADE_PRE_SCRIPT} \
-	${UPGRADE_POST_SCRIPT}
+	$START_SCRIPT \
+	$INIT_PRE_SCRIPT \
+	$INIT_POST_SCRIPT \
+	$UPGRADE_PRE_SCRIPT \
+	$UPGRADE_POST_SCRIPT
 do
 	replace "\*\*OS_USERNAME\*\*" "%{os_username}" ${file}
 	replace "\*\*OS_UID\*\*" "%{os_uid}" ${file}
 	replace "\*\*ZENHOME\*\*" "%{zenhome}" ${file}
 	replace "\*\*MYSQL_HOST\*\*" "localhost" ${file}
-	replace "\*\*MYSQL_ROOT_USERNAME\*\*" "root" ${file}
+	replace "\*\*MYSQL_ROOT_USERNAME\*\*" "mysql" ${file}
 	replace "\*\*MYSQL_ROOT_PASSWD\*\*" "" ${file}
 	replace "\*\*MYSQL_HOST\*\*" "localhost" ${file}
 	replace "\*\*MYSQL_USERNAME\*\*" "%{mysql_username}" ${file}
@@ -175,7 +195,7 @@ do
 	replace "\*\*SNMPD_CONF\*\*" "%{snmpd_conf}" ${file}
 	replace "\*\*MY_CNF\*\*" "%{my_cnf}" ${file}
 	replace "\*\*ZOPEHOME\*\*" "%{zopehome}" ${file}
-	chmod +x ${file}
+	chmod +x $file
 done
 
 # copy the [install,shared]-functions because they are used by zenoss_init
@@ -184,18 +204,16 @@ cp $ZEN_BUILD_DIR/install-functions.sh $ZEN_INST_DIR/bin
 
 # copy filesystem scripts to the real filesystem
 cd $ZEN_BUILD_DIR/extras/etc
-for file in $(find -type f | grep -v .svn) do;
-	DEST=$RPM_BUILD_ROOT/etc/${file}
-    DIR=$(dirname $DEST)
+for file in $(find -type f | grep -v .svn); do
+	DEST=$RPM_BUILD_ROOT/etc/$file
+	DIR=$(dirname $DEST)
 	if [ ! -d $DIR ]; then
 		mkdir -p $DIR
 	fi
 
-    cp ${file} ${DEST}
-    replace "\*\*ZENHOME\*\*" "%{zenhome}" ${DEST}
+	cp $file $DEST
+	replace "\*\*ZENHOME\*\*" "%{zenhome}" $DEST
 done
-
-%install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -303,7 +321,7 @@ if [ "$1" -eq 0 ]; then
 		%{zenhome}/.fresh_install \
 		%{zenhome}/.upgraded
 	do
-		rm -rf ${target}
+		rm -rf $target
 	done
 fi
 
