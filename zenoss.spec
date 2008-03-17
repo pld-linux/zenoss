@@ -56,7 +56,7 @@
 Summary:	The Open Source Network Management System
 Name:		zenoss
 Version:	2.1.3
-Release:	1.1
+Release:	1.2
 License:	GPL
 Group:		Management/Network
 Source0:	http://dl.sourceforge.net/zenoss/%{name}-%{version}-0.tar.gz
@@ -330,8 +330,39 @@ fi
 
 # make the following files owned by zenoss:wheel with the default perms
 %defattr(-,zenoss,zenoss)
+
+%dir %{zenhome}
+%dir %{zenhome}/Products
 %doc %{zenhome}/Products/LICENSE.txt
 %doc %{zenhome}/Products/COPYRIGHT.txt
-%{zenhome}
+%{zenhome}/Products/AdvancedQuery
+%{zenhome}/Products/CMFCore
+%{zenhome}/Products/DataCollector
+%{zenhome}/Products/Five
+%{zenhome}/Products/GenericSetup
+%{zenhome}/Products/Hotfix*
+%{zenhome}/Products/ManagableIndex
+%{zenhome}/Products/OFolder
+%{zenhome}/Products/Plug*
+%{zenhome}/Products/Zen*
+
+%{zenhome}/doc
+%{zenhome}/extras
+%{zenhome}/import
+%{zenhome}/include
+%{zenhome}/lib
+%{zenhome}/libexec
+%{zenhome}/man
+%{zenhome}/share
+%{zenhome}/skel
+%{zenhome}/etc
+
+%dir %{zenhome}/bin
+%{zenhome}/bin/[!z]*
+%{zenhome}/bin/z[!e]*
+%{zenhome}/bin/ze[!n]*
+%{zenhome}/bin/zen[!s]*
+%{zenhome}/bin/zens[!o]*
+
 %defattr(4755,root,zenoss)
 %{zenhome}/bin/zensocket
