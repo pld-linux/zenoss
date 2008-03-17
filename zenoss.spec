@@ -36,8 +36,8 @@
 
 # a shell account controls the zenoss processes
 %define os_username zenoss
-%define os_uid 1337
-%define os_gid 1337
+%define os_uid 194
+%define os_gid 194
 %define os_home /home/zenoss
 %define os_shell /bin/bash
 
@@ -62,9 +62,7 @@ Group:		Management/Network
 Source0:	http://dl.sourceforge.net/zenoss/%{name}-%{version}-0.tar.gz
 # Source0-md5:	19ad0dabe9ebce2b2e325aab2dc42301
 BuildRequires:	autoconf >= 2.53
-BuildRequires:	gcc
 BuildRequires:	libstdc++-devel
-BuildRequires:	mysql >= 5.0.22
 BuildRequires:	mysql-devel >= 5.0.22
 BuildRequires:	python-devel >= 2.3.4
 BuildRequires:	rpmbuild(macros) >= 1.202
