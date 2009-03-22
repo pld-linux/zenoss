@@ -163,7 +163,7 @@ cp $CONF_DIR/my.cnf $ZEN_INST_DIR/etc
 install -d $ZEN_INST_DIR/log
 
 # land the zenctl into the init.d directory as "zenoss"
-INIT_SCRIPT_DIR=$RPM_BUILD_ROOT%{_initrddir}
+INIT_SCRIPT_DIR=$RPM_BUILD_ROOT/etc/rc.d/init.d
 START_SCRIPT=$INIT_SCRIPT_DIR/zenoss
 INIT_PRE_SCRIPT=$ZEN_INST_DIR/bin/zenoss_init_pre
 INIT_POST_SCRIPT=$ZEN_INST_DIR/bin/zenoss_init_post
