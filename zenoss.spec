@@ -105,6 +105,8 @@ Key features include:
 %build
 
 %install
+rm -rf $RPM_BUILD_ROOT
+
 replace() {
     SEARCH=$1
     REPLACE=$2
